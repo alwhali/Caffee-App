@@ -369,9 +369,9 @@ Screenshots are not included in the repository. Below are placeholder descriptio
 | Screen     | Description                                      |
 |------------|--------------------------------------------------|
 | **Home**   | Scrollable list of drink cards with images, names, and descriptions. AppBar with "Menu" title and cart icon.
-<img src="lib/screens/home.dart" width="300">
+<img src="assets/screen_shot/Home.png" width="300">
 | **Details**| Full-screen drink detail with PageView carousel, drink image with shadow, name, description, price, size selector (Small/Medium/Large), Hot/Cold toggle, and quantity counter. 
-<img src="lib/screens/details.dart" width="300">
+<img src="assets/screen_shot/detail_Drink.png" width="300">
 |
 
 ---

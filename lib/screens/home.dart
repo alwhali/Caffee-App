@@ -1,3 +1,4 @@
+import 'package:caffee_app/global_variable.dart';
 import 'package:caffee_app/model/drink_model.dart';
 import 'package:caffee_app/screens/details.dart';
 import 'package:caffee_app/widgets/drink_card_widget.dart';
@@ -76,12 +77,11 @@ class _HomeState extends State<Home> {
                       scale: scale,
                       child: GestureDetector(
                         onTap: () {
+                          indexOfDrink = index;
+                          setState(() {});
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  Details(indexOfDrink: index),
-                            ),
+                            MaterialPageRoute(builder: (context) => Details()),
                           );
                         },
                         child: MyCardDrink(

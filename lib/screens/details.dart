@@ -1,11 +1,11 @@
 import 'dart:ffi';
 
+import 'package:caffee_app/global_variable.dart';
 import 'package:caffee_app/model/drink_model.dart';
 import 'package:flutter/material.dart';
 
 class Details extends StatefulWidget {
-  Details({super.key, required this.indexOfDrink});
-  int indexOfDrink;
+  Details({super.key});
 
   @override
   State<Details> createState() => _DetailsState();
@@ -13,15 +13,14 @@ class Details extends StatefulWidget {
 
 class _DetailsState extends State<Details> {
   final PageController _pageController = PageController(
-    initialPage: 0,
-    viewportFraction: 0.60,
+    initialPage: indexOfDrink!,
+    viewportFraction: 0.6,
   );
-  double _currentPage = 0;
-  List<IconData> sizeOfDrink = [
-    Icons.donut_small,
-    Icons.density_medium,
-    Icons.donut_large,
-    Icons.arrow_forward,
+  late double _currentPage;
+  List<Map<String, Icon>> sizeOfDrink = [
+    {"Small": Icon(Icons.local_cafe, size: 20)},
+    {"Medium": Icon(Icons.local_cafe, size: 24)},
+    {"Large": Icon(Icons.local_cafe, size: 28)},
   ];
 
   int indexOfSizeSelected = 0;
@@ -31,13 +30,12 @@ class _DetailsState extends State<Details> {
   @override
   initState() {
     super.initState();
+    _currentPage = indexOfDrink!.toDouble();
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page!;
-        // _currentPage = widget.indexOfDrink.toDouble();
       });
     });
-    // _pageController.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
   }
 
   @override
@@ -61,10 +59,11 @@ class _DetailsState extends State<Details> {
               // final scale = 1 - (_currentPage - index).abs() / drinks.length;
               final scale = 1 - (_currentPage - index).abs() * 1;
               final translateY = (_currentPage - index).abs() * 400;
+
               return Transform.translate(
                 offset: Offset(translateY, 0),
                 child: Transform.scale(
-                  scale: scale.clamp(0.5, 1.0),
+                  scale: scale.clamp(0.5, 0.9),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,31 +71,46 @@ class _DetailsState extends State<Details> {
                       Stack(
                         alignment: AlignmentGeometry.bottomCenter,
                         children: [
-                          //shadow under drink
-                          Positioned(
-                            bottom: 60,
-                            left: 0,
-                            right: 0,
+                          //drink image
+                          Container(
+                            padding: EdgeInsets.only(bottom: 20),
+                            // height: 500,
                             child: Container(
-                              height: 30,
-                              width: 10,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black38,
-                                    blurRadius: 35,
-                                    spreadRadius: 5,
-                                  ),
-                                ],
+                              // height: 400,
+                              child: Image.asset(
+                                drinks[index].image!,
+                                height: 450,
+                                fit: BoxFit.fitHeight,
                               ),
                             ),
                           ),
-                          //drink image
-                          Image.asset(
-                            drinks[index].image!,
-                            height: 600,
-                            fit: BoxFit.contain,
+                          //shadow under drink
+                          Positioned(
+                            bottom: -20,
+                            left: 0,
+                            right: 0,
+                            // child: Container(
+                            //   height: 30,
+                            //   width: 10,
+                            //   decoration: BoxDecoration(
+                            //     borderRadius: BorderRadius.circular(50),
+                            //     boxShadow: [
+                            //       BoxShadow(
+                            //         color: Colors.black38,
+                            //         blurRadius: 35,
+                            //         spreadRadius: 5,
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              child: Image.asset(
+                                "assets/drinks/shadow.png",
+                                height: 50, //shadow under drink
+                                width: 30, //shadow under drink
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -148,19 +162,21 @@ class _DetailsState extends State<Details> {
           ),
           // size of drink
           Positioned(
-            bottom: 120,
+            bottom: 100,
             left: 0,
             right: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
                   Flexible(
                     flex: 3,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: List.generate(3, (index) {
                         return GestureDetector(
                           onTap: () {
@@ -168,21 +184,36 @@ class _DetailsState extends State<Details> {
                               indexOfSizeSelected = index;
                             });
                           },
-                          child: Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: indexOfSizeSelected == index
-                                  ? Colors.amber
-                                  : Colors.white,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.black87),
-                            ),
-                            child: Icon(
-                              sizeOfDrink[index],
-                              color: indexOfSizeSelected == index
-                                  ? Colors.white
-                                  : Colors.black87,
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(15),
+                                decoration: BoxDecoration(
+                                  color: indexOfSizeSelected == index
+                                      ? Colors.amber
+                                      : Colors.white,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.black87),
+                                ),
+                                // child: Icon(
+                                //   sizeOfDrink[index],
+                                //   color: indexOfSizeSelected == index
+                                //       ? Colors.white
+                                //       : Colors.black87,
+                                // ),
+                                child: sizeOfDrink[index].values.elementAt(0),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                sizeOfDrink[index].keys.elementAt(0),
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       }),
@@ -197,7 +228,7 @@ class _DetailsState extends State<Details> {
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.black87),
                       ),
-                      child: Icon(sizeOfDrink[3], color: Colors.black87),
+                      child: Icon(Icons.arrow_forward, color: Colors.black87),
                     ),
                   ),
                 ],
@@ -207,7 +238,7 @@ class _DetailsState extends State<Details> {
           // siwtch hot and cold drink
           //counter drinks
           Positioned(
-            bottom: 40,
+            bottom: 30,
             left: 0,
             right: 0,
             child: Padding(
@@ -300,7 +331,7 @@ class _DetailsState extends State<Details> {
                           height: double.infinity,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.black12,
+                            color: const Color.fromARGB(31, 174, 170, 170),
                             borderRadius: BorderRadius.circular(40),
                           ),
                           child: Row(

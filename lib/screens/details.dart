@@ -2,7 +2,7 @@ import 'package:caffee_app/global_variable.dart';
 import 'package:caffee_app/model/drink_model.dart';
 import 'package:flutter/material.dart';
 
-enum EnumSizeDrink { small, medium, large }
+enum EnumSizeDrink { Small, Medium, Large }
 
 class Details extends StatefulWidget {
   const Details({super.key});
@@ -51,7 +51,7 @@ class _DetailsState extends State<Details> {
             right: 20,
             child: DrinkDetailsWidget(currentPage: _currentPage),
           ),
-          // size of drink
+          // size of drinks
           Positioned(
             bottom: 100,
             left: 0,
@@ -71,29 +71,15 @@ class _DetailsState extends State<Details> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: List.generate(3, (index) {
                         return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              indexOfSizeSelected = index;
-                            });
-                          },
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              DrinkSizeButton(
-                                indexOfSizeSelected: indexOfSizeSelected,
-                                sizeOfDrink: EnumSizeDrink.values[index],
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                // listOfSizeDrink[index].keys.elementAt(0),
-                                EnumSizeDrink.values[index].name,
-                                style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
+                          onTap: () {},
+                          child: DrinkSizeButton(
+                            indexOfSizeSelected: indexOfSizeSelected,
+                            sizeOfDrink: EnumSizeDrink.values[index],
+                            onTap: () {
+                              setState(() {
+                                indexOfSizeSelected = index;
+                              });
+                            },
                           ),
                         );
                       }),
@@ -280,38 +266,69 @@ class _SwitchHotColdState extends State<SwitchHotCold> {
   }
 }
 
-class DrinkSizeButton extends StatelessWidget {
-  const DrinkSizeButton({
+class DrinkSizeButton extends StatefulWidget {
+  DrinkSizeButton({
     super.key,
     required this.indexOfSizeSelected,
     required this.sizeOfDrink,
+    required this.onTap,
   });
 
-  final int indexOfSizeSelected;
+  int indexOfSizeSelected;
   // final List<Map<String, Icon>> sizeOfDrink;
-  final EnumSizeDrink sizeOfDrink;
+  EnumSizeDrink sizeOfDrink;
+  void Function()? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: sizeOfDrink.index == indexOfSizeSelected
-            ? Colors.amber
-            : Colors.white,
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.black87),
-      ),
-      // child: Icon(
-      //   sizeOfDrink[index],
-      //   color: indexOfSizeSelectedindexOfSizeSelected == index
-      //       ? Colors.white
-      //       : Colors.black87,
-      // ),
+  State<DrinkSizeButton> createState() => _DrinkSizeButtonState();
+}
 
-      //values means the icon size
-      //keys means the text size
-      child: listOfSizeDrink[sizeOfDrink.index].values.elementAt(0),
+class _DrinkSizeButtonState extends State<DrinkSizeButton> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        GestureDetector(
+          // onTap: () {
+          //     setState(() {
+          //                    widget.indexOfSizeSelected =widget.sizeOfDrink.index;
+          //                   });
+          // },
+          onTap: widget.onTap,
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 500),
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: widget.sizeOfDrink.index == widget.indexOfSizeSelected
+                  ? Colors.amber
+                  : Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.black87),
+            ),
+
+            // child: Icon(
+            //   sizeOfDrink[index],
+            //   color: indexOfSizeSelectedindexOfSizeSelected == index
+            //       ? Colors.white
+            //       : Colors.black87,
+            // ),
+
+            //values means the icon size
+            //keys means the text size
+            child: listOfSizeDrink[widget.sizeOfDrink.index].values.elementAt(
+              0,
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          // listOfSizeDrink[index].keys.elementAt(0),
+          EnumSizeDrink.values[widget.sizeOfDrink.index].name,
+          style: TextStyle(color: Colors.black87, fontSize: 16),
+        ),
+      ],
     );
   }
 }
